@@ -1,0 +1,23 @@
+<odoo>
+    <template id="order_summary_popup" inherit_id="point_of_sale.PaymentScreen">
+        <xpath expr="//div[@class='payment-buttons']" position="after">
+            <div class="order-summary-popup">
+                <t t-if="order.get_orderlines().length">
+                    <h3>Order Summary</h3>
+                    <ul>
+                        <t t-foreach="order.get_orderlines()" t-as="line">
+                            <li>
+                                <span><t t-esc="line.product.display_name"/></span>
+                                <span><t t-esc="line.quantity"/> x <t t-esc="line.price.toFixed(2)"/></span>
+                            </li>
+                        </t>
+                    </ul>
+                    <div>
+                        <strong>Total: </strong>
+                        <span><t t-esc="order.get_total_with_tax().toFixed(2)"/></span>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

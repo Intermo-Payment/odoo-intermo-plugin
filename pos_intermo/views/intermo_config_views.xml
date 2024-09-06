@@ -1,0 +1,34 @@
+<odoo>
+    <record id="view_intermo_config_form" model="ir.ui.view">
+        <field name="name">intermo.config.form</field>
+        <field name="model">intermo.config</field>
+        <field name="arch" type="xml">
+            <form string="Intermo Configuration">
+                <sheet>
+                    <group string="Key Settings">
+                        <field name="auth_key"/>
+                        <field name="secret_key"/>
+                        <field name="public_key"/>
+                    </group>
+                    <footer>
+                        <button string="Save" type="object" class="btn-primary" name="set_values"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to Open the Form View -->
+    <record id="action_intermo_config" model="ir.actions.act_window">
+        <field name="name">Intermo Configuration</field>
+        <field name="res_model">intermo.config</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_intermo_config_form"/>
+        <field name="target">current</field>
+    </record>
+    
+    <!-- Menu Item to Access the Configuration -->
+    <!-- <menuitem id="menu_intermo_config_root" name="Intermo" sequence="10"/>
+    <menuitem id="menu_intermo_configuration" name="Configuration" parent="menu_intermo_config_root" action="action_intermo_config" sequence="10"/> -->
+</odoo>

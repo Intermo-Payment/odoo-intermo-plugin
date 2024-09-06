@@ -1,0 +1,7 @@
+<!-- <odoo>
+    <record id="payment_method_intermo" model="pos.payment.method">
+        <field name="name">Intermo Payment test</field>
+        <!-- Ensure that 'is_intermo' is a valid field in 'pos.payment.method' model -->
+        <field name="is_intermo">True</field>
+    </record>
+</odoo> -->
