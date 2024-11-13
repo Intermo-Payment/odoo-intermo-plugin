@@ -11,11 +11,11 @@ Allow intermo POS payments
 ==============================
 
 This module allows customers to pay for their orders with debit/credit
-cards and UPI. The transactions are processed by intermo POS. A intermo merchant account is necessary. It allows the
+cards and Wallet. The transactions are processed by intermo POS. A intermo merchant account is necessary. It allows the
 following:
 
 * Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen
-* Supported cards: Visa, MasterCard, Rupay, UPI
+* Supported cards: Visa, MasterCard, Sama Money and other Wallet
     """,
     'data': [
         # 'views/pos_payment_method_views.xml',
