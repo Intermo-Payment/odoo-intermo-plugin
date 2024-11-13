@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_intermo.PosIntermoPopup">
+        <div class="popup popup-confirm">
+            <div class="modal-header">
+                <h4 class="modal-title title drag-handle">
+                    <t t-esc="props.title"/>
+                </h4>
+            </div>
+            <main class="modal-body">
+                <img t-attf-src="data:image/png;base64,{{props.body}}" width="100%" height="600px"/>
+                <span t-att-class="state.message_type == 'info'? 'text-info' : state.message_type == 'error'? 'text-danger': 'text-success'"><t t-esc="state.error_message"/></span>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">
+                    <t t-esc="props.confirmText"/>
+                </div>
+                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                    <t t-esc="props.cancelText"/>
+                </div>
+            </footer>
+        </div>
+    </t>
+
+
+</templates>

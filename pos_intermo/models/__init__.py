@@ -1,3 +1,2 @@
-from . import intermo_config
-from . import payment_provider
-from . import payment_transaction
+from . import pos_payment_method
+from . import pos_payment
