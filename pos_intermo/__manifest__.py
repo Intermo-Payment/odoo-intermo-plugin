@@ -23,9 +23,6 @@
         'security/ir.model.access.csv',
         'views/pos_payment_views.xml',
         'views/pos_payment_method_views.xml',
-        # 'views/intermo_settings_views.xml',
-        # 'views/intermo_menu.xml',
-        # 'data/intermo_settings_data.xml',  # Un-commented to include data file
     ],
     'depends': ['point_of_sale'],
     'installable': True,
