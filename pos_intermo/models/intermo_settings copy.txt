@@ -1,0 +1,257 @@
+# from odoo import models, fields, api
+# from odoo.exceptions import ValidationError
+# import random
+
+# class IntermoSettings(models.Model):
+#     _name = 'intermo.settings'
+#     _description = 'Intermo API Settings'
+#     _rec_name = 'display_name'
+
+#     name = fields.Char(default='Intermo Settings', readonly=True)
+#     display_name = fields.Char(string='Display Name', compute='_compute_display_name', store=False)
+
+#     # Fields for Sandbox and Production keys
+#     sandbox_api_key = fields.Char(string="Sandbox API Key", required=True)
+#     sandbox_secret_key = fields.Char(string="Sandbox Secret Key", required=True)
+#     sandbox_auth_key = fields.Char(string="Sandbox Auth Token", required=True)
+
+#     live_api_key = fields.Char(string="Live API Key", required=True)
+#     live_secret_key = fields.Char(string="Live Secret Key", required=True)
+#     live_auth_key = fields.Char(string="Live Auth Token", required=True)
+
+#     # Auto-generated plugin key
+#     plugin_key = fields.Char(
+#         string="Plugin Key",
+#         readonly=True,
+#         default=lambda self: self._generate_plugin_key()
+#     )
+
+#     # Environment selection
+#     environment = fields.Selection([
+#         ('sandbox', 'Sandbox'),
+#         ('production', 'Production'),
+#     ], string="Environment", default='sandbox', required=True)
+
+#     # Language selection
+#     language = fields.Selection([
+#         ('en', 'English'),
+#         ('fr', 'French')
+#     ], string="Language", default='en', required=True)
+
+#     _sql_constraints = [
+#         ('singleton_unique', 'unique(name)', 'Only one Intermo Settings record is allowed.')
+#     ]
+
+#     @api.model
+#     def _generate_plugin_key(self):
+#         """Generate a random 18-digit plugin key."""
+#         return str(random.randint(10**17, (10**18)-1))
+
+#     @api.depends()
+#     def _compute_display_name(self):
+#         for record in self:
+#             record.display_name = "Intermo Settings"
+
+#     @api.model
+#     def get_or_create_singleton(self):
+#         """Retrieve the singleton record, creating it if necessary."""
+#         settings = self.search([], limit=1)
+#         if not settings:
+#             settings = self.create({
+#                 'name': 'Intermo Settings',
+#                 'environment': 'sandbox',
+#                 'language': 'en',
+#             })
+#         return settings
+
+#     @api.model
+#     def default_get(self, fields):
+#         """Ensure the singleton record is always loaded or created."""
+#         res = super(IntermoSettings, self).default_get(fields)
+#         singleton = self.get_or_create_singleton()
+#         for field in fields:
+#             if field in singleton:
+#                 res[field] = singleton[field]
+#         return res
+
+#     def write(self, vals):
+#         if 'plugin_key' in vals:
+#             raise ValidationError("Plugin Key cannot be modified.")
+#         return super(IntermoSettings, self).write(vals)
+
+#     @api.constrains('plugin_key')
+#     def _check_plugin_key(self):
+#         for record in self:
+#             if not record.plugin_key:
+#                 record.plugin_key = self._generate_plugin_key()
+
+
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+import random
+
+class IntermoSettings(models.Model):
+    _name = 'intermo.settings'
+    _description = 'Intermo API Settings'
+    _rec_name = 'display_name'
+
+    name = fields.Char(default='Intermo Settings', readonly=True)
+    display_name = fields.Char(string='Display Name', compute='_compute_display_name', store=False)
+
+    # Fields for Sandbox and Production keys
+    sandbox_api_key = fields.Char(string="Sandbox API Key", required=True)
+    sandbox_secret_key = fields.Char(string="Sandbox Secret Key", required=True)
+    sandbox_auth_key = fields.Char(string="Sandbox Auth Token", required=True)
+
+    live_api_key = fields.Char(string="Live API Key", required=True)
+    live_secret_key = fields.Char(string="Live Secret Key", required=True)
+    live_auth_key = fields.Char(string="Live Auth Token", required=True)
+
+    # Auto-generated plugin key
+    plugin_key = fields.Char(
+        string="Plugin Key",
+        readonly=True,
+        default=lambda self: self._generate_plugin_key()
+    )
+
+    # Environment selection
+    environment = fields.Selection([
+        ('sandbox', 'Sandbox'),
+        ('production', 'Production'),
+    ], string="Environment", default='sandbox', required=True)
+
+    # Language selection
+    language = fields.Selection([
+        ('en', 'English'),
+        ('fr', 'French')
+    ], string="Language", default='en', required=True)
+
+    _sql_constraints = [
+        ('singleton_unique', 'unique(name)', 'Only one Intermo Settings record is allowed.')
+    ]
+
+    @api.model
+    def _generate_plugin_key(self):
+        """Generate a random 18-digit plugin key."""
+        return str(random.randint(10**17, (10**18)-1))
+
+    @api.depends()
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = "Intermo Settings"
+
+    @api.model
+    def get_or_create_singleton(self):
+        """Retrieve the singleton record, creating it if necessary."""
+        settings = self.search([], limit=1)
+        if not settings:
+            settings = self.create({
+                'name': 'Intermo Settings',
+                'environment': 'sandbox',
+                'language': 'en',
+            })
+        return settings
+
+    @api.model
+    def default_get(self, fields):
+        """Ensure the singleton record is always loaded or created."""
+        res = super(IntermoSettings, self).default_get(fields)
+        singleton = self.get_or_create_singleton()
+        for field in fields:
+            if field in singleton:
+                res[field] = singleton[field]
+        return res
+
+    def write(self, vals):
+        if 'plugin_key' in vals:
+            raise ValidationError("Plugin Key cannot be modified.")
+        
+        # Write the values and reload the view to reflect the changes immediately
+        result = super(IntermoSettings, self).write(vals)
+        self.invalidate_cache()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    @api.constrains('plugin_key')
+    def _check_plugin_key(self):
+        for record in self:
+            if not record.plugin_key:
+                record.plugin_key = self._generate_plugin_key()
+
+    def get_active_keys(self):
+        """Return the API keys based on the current environment."""
+        if self.environment == 'sandbox':
+            return {
+                'api_key': self.sandbox_api_key,
+                'secret_key': self.sandbox_secret_key,
+                'auth_key': self.sandbox_auth_key,
+                'plugin_key': self.plugin_key,
+            }
+        elif self.environment == 'production':
+            return {
+                'api_key': self.live_api_key,
+                'secret_key': self.live_secret_key,
+                'auth_key': self.live_auth_key,
+                'plugin_key': self.plugin_key,
+            }
+        else:
+            raise ValidationError("Invalid environment selected.")
+
+# from odoo import models, fields, api, _
+# from odoo.exceptions import UserError
+
+# class IntermoSettings(models.TransientModel):
+#     _inherit = 'res.config.settings'
+#     _description = 'Intermo API Settings'
+
+#     # Fields
+#     sandbox_api_key = fields.Char(string="Sandbox API Key")
+#     sandbox_secret_key = fields.Char(string="Sandbox Secret Key")
+#     sandbox_auth_key = fields.Char(string="Sandbox Auth Token")
+#     live_api_key = fields.Char(string="Live API Key")
+#     live_secret_key = fields.Char(string="Live Secret Key")
+#     live_auth_key = fields.Char(string="Live Auth Token")
+#     environment = fields.Selection([
+#         ('sandbox', 'Sandbox'),
+#         ('production', 'Production'),
+#     ], string="Environment", default='sandbox')
+#     language = fields.Selection([
+#         ('en', 'English'),
+#         ('fr', 'French')
+#     ], string="Language", default='en')
+#     plugin_key = fields.Char(string="Plugin Key", readonly=True)
+
+#     # Explicitly load values from ir.config_parameter
+#     @api.model
+#     def get_values(self):
+#         res = super(IntermoSettings, self).get_values()
+#         params = self.env['ir.config_parameter'].sudo()
+#         res.update(
+#             sandbox_api_key=params.get_param('intermo.sandbox_api_key', default='YourDefaultSandboxAPIKey'),
+#             sandbox_secret_key=params.get_param('intermo.sandbox_secret_key', default='YourDefaultSandboxSecretKey'),
+#             sandbox_auth_key=params.get_param('intermo.sandbox_auth_key', default='YourDefaultSandboxAuthToken'),
+#             live_api_key=params.get_param('intermo.live_api_key', default='YourDefaultLiveAPIKey'),
+#             live_secret_key=params.get_param('intermo.live_secret_key', default='YourDefaultLiveSecretKey'),
+#             live_auth_key=params.get_param('intermo.live_auth_key', default='YourDefaultLiveAuthToken'),
+#             environment=params.get_param('intermo.environment', default='sandbox'),
+#             language=params.get_param('intermo.language', default='en'),
+#             plugin_key=params.get_param('intermo.plugin_key', default='GeneratedPluginKey123')
+#         )
+#         return res
+
+#     # Explicitly save values to ir.config_parameter
+#     def set_values(self):
+#         super(IntermoSettings, self).set_values()
+#         params = self.env['ir.config_parameter'].sudo()
+#         params.set_param('intermo.sandbox_api_key', self.sandbox_api_key or 'YourDefaultSandboxAPIKey')
+#         params.set_param('intermo.sandbox_secret_key', self.sandbox_secret_key or 'YourDefaultSandboxSecretKey')
+#         params.set_param('intermo.sandbox_auth_key', self.sandbox_auth_key or 'YourDefaultSandboxAuthToken')
+#         params.set_param('intermo.live_api_key', self.live_api_key or 'YourDefaultLiveAPIKey')
+#         params.set_param('intermo.live_secret_key', self.live_secret_key or 'YourDefaultLiveSecretKey')
+#         params.set_param('intermo.live_auth_key', self.live_auth_key or 'YourDefaultLiveAuthToken')
+#         params.set_param('intermo.environment', self.environment or 'sandbox')
+#         params.set_param('intermo.language', self.language or 'en')
+#         params.set_param('intermo.plugin_key', self.plugin_key or 'GeneratedPluginKey123')

@@ -5,23 +5,27 @@
     'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
-    'summary': 'Integrate your POS with a intermo payment terminal',
+    'summary': 'Integrate your POS with Intermo payment terminals',
     'description': """
-Allow intermo POS payments
-==============================
+        POS Intermo Integration
+        ==============================
 
-This module allows customers to pay for their orders with debit/credit
-cards and Wallet. The transactions are processed by intermo POS. A intermo merchant account is necessary. It allows the
-following:
+        This module allows customers to pay with debit/credit cards and wallets through Intermo POS terminals.
+        Transactions are processed by Intermo POS, requiring a valid Intermo merchant account.
 
-* Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen
-* Supported cards: Visa, MasterCard, Sama Money and other Wallet
+        Features:
+        * Quick payments via card swipe, scan, or QR code.
+        * Supported payment methods include Visa, MasterCard, Sama Money, and other Wallets.
+
+        For more information, visit [intermo.net](https://intermo.net).
     """,
     'data': [
-        # 'views/pos_payment_method_views.xml',
-        "security/ir.model.access.csv",
+        'security/ir.model.access.csv',
         'views/pos_payment_views.xml',
         'views/pos_payment_method_views.xml',
+        # 'views/intermo_settings_views.xml',
+        # 'views/intermo_menu.xml',
+        # 'data/intermo_settings_data.xml',  # Un-commented to include data file
     ],
     'depends': ['point_of_sale'],
     'installable': True,
@@ -31,9 +35,10 @@ following:
             'pos_intermo/static/src/js/intermo.js',
         ],
         'point_of_sale._assets_pos': [
-
             'pos_intermo/static/**/*',
         ],
     },
     'license': 'LGPL-3',
+    'website': 'https://intermo.net',
+    'images': ['static/description/icon.png'],  # Path to the module's icon
 }

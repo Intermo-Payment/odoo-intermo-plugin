@@ -1,0 +1,31 @@
+<!-- <odoo>
+    <record id="view_intermo_settings_form" model="ir.ui.view">
+        <field name="name">intermo.settings.form</field>
+        <field name="model">intermo.settings</field>
+        <field name="arch" type="xml">
+            <form string="Intermo API Settings" create="false" edit="true">
+                <sheet>
+                    <group string="Intermo API Settings">
+                        <group string="Sandbox Keys" colspan="2">
+                            <field name="sandbox_api_key"/>
+                            <field name="sandbox_secret_key"/>
+                            <field name="sandbox_auth_key"/>
+                        </group>
+                        <group string="Production Keys" colspan="2">
+                            <field name="live_api_key"/>
+                            <field name="live_secret_key"/>
+                            <field name="live_auth_key"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="plugin_key" readonly="1"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="environment"/>
+                            <field name="language"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo> -->
