@@ -26,7 +26,7 @@
         # 'views/pos_payment_views.xml'
         'views/pos_payment_method_views.xml'
     ],
-    'depends': ['point_of_sale','account'],
+    'depends': ['point_of_sale'],
     'assets': {
         'web.assets_backend': [
             'pos_intermo/static/src/js/jquery.js',
