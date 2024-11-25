@@ -114,6 +114,3 @@ class PosPaymentMethod(models.Model):
         """Cancel a payment request."""
         _logger.info(f"Canceling payment request with data: {data}")
         return {'errorMessage': ""}
-    
-    
-

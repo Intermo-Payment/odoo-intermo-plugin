@@ -4,7 +4,7 @@
     'name': 'POS Intermo',
     'version': '1.0',
     'category': 'Sales/Point of Sale',
-    'sequence': 6,
+    'sequence': -9999999,
     'summary': 'Integrate your POS with Intermo payment terminals',
     'description': """
         POS Intermo Integration
@@ -23,6 +23,8 @@
         'security/ir.model.access.csv',
         'views/intermo_gateway_config_form_view.xml',
         'views/menu_api_keys.xml',
+        # 'views/pos_payment_views.xml'
+        'views/pos_payment_method_views.xml'
     ],
     'depends': ['point_of_sale','account'],
     'assets': {

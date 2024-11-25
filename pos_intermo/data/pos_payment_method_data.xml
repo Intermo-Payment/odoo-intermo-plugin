@@ -1,0 +1,18 @@
+<!-- <odoo>
+    <!-- Define the Bank Journal -->
+    <record id="account_journal_bank" model="account.journal">
+        <field name="type">bank</field>
+        <field name="name">Bank</field>
+        <field name="code">BNK1</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Define the Payment Method -->
+    <record id="pos_payment_method_intermo" model="pos.payment.method">
+        <field name="name">Intermo Payment</field>
+        <field name="journal_id" ref="account_journal_bank"/>
+        <field name="use_payment_terminal">intermo</field>
+        <field name="is_cash_count">False</field>
+    </record>
+</odoo> -->
