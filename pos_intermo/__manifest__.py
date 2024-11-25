@@ -21,11 +21,10 @@
     """,
     'data': [
         'security/ir.model.access.csv',
-        'views/pos_payment_views.xml',
-        'views/pos_payment_method_views.xml',
+        'views/intermo_gateway_config_form_view.xml',
+        'views/menu_api_keys.xml',
     ],
-    'depends': ['point_of_sale'],
-    'installable': True,
+    'depends': ['point_of_sale','account'],
     'assets': {
         'web.assets_backend': [
             'pos_intermo/static/src/js/jquery.js',
@@ -38,4 +37,5 @@
     'license': 'LGPL-3',
     'website': 'https://intermo.net',
     'images': ['static/description/icon.png'],  # Path to the module's icon
+    'installable': True,
 }

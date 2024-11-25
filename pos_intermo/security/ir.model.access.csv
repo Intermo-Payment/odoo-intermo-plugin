@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_pos_payment_txn,access.pos.payment.txn,model_pos_payment_txn,,1,1,1,1
+access_intermo_gateway_config_user,Access Intermo Gateway Config,model_intermo_gateway_config,base.group_user,1,1,1,1

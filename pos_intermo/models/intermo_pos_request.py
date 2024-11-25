@@ -1,38 +1,45 @@
 import requests
 import logging
 
-from odoo import _
-REQUEST_TIMEOUT = 10
-
 _logger = logging.getLogger(__name__)
 
 class IntermoPosRequest:
-    def __init__(self, payment_method):
-        self.payment_method = payment_method
-        self.session = requests.Session()
+    def __init__(self, env):
+        """
+        Initialize the IntermoPosRequest class with the Odoo environment.
+        """
+        self.env = env
 
-    def _intermo_get_endpoint(self, intermo_mode):
-        if intermo_mode == 'test':
-            return 'http://localhost:7777/SandBox/v1/api/GetAccessToken'
-        else:
-            return 'http://localhost:7777/SandBox/v1/api/GetAccessToken'
+    def _get_access_token(self, payload):
+        """
+        Retrieve access token for Intermo integration.
+        This method uses the Intermo Gateway configuration in Odoo.
 
+        Args:
+            payload (dict): The payload to send for authentication.
 
-    def _call_intermo(self, endpoint, payload, token, intermo_mode):
-       
-        endpoint = f"{self._intermo_get_endpoint(intermo_mode)}"
-        try:
-            headers = {
-                "Authorization": f"Bearer {token}"
-            }
-            response = self.session.post(endpoint, json=payload, headers=headers)
-            print("==================-----------------", response)
-            response.raise_for_status()
-            res_json = response.json()
-        except requests.exceptions.RequestException as error:
-            _logger.warning("Cannot connect with Intermo POS. Error: %s", error)
-            return {'errorMessage': str(error)}
-        except ValueError as error:
-            _logger.warning("Cannot decode response json. Error: %s", error)
-            return {'errorMessage': _("Cannot decode Intermo POS response")}
-        return res_json
+        Returns:
+            dict: The API response.
+        """
+        config = self.env['intermo.gateway.config'].search([], limit=1)
+        if not config:
+            raise ValueError("No Intermo Gateway Configuration found")
+
+        # Determine the endpoint based on the mode
+        # url = (
+        #     config.sandbox_public_key
+        #     if config.mode == 'sandbox'
+        #     else config.production_public_key
+        # )
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {config.sandbox_authentication_key if config.mode == "sandbox" else config.production_authentication_key}',
+        }
+
+        _logger.info(f"Sending request to URL: http://localhost:7777/SandBox/v1/api/GetAccessToken with payload: {payload}")
+        response = requests.post("http://localhost:7777/SandBox/v1/api/GetAccessToken", json=payload, headers=headers)
+        if response.status_code != 200:
+            raise ValueError(f"Error fetching access token: {response.text}")
+
+        _logger.info(f"Received response: {response.json()}")
+        return response.json()

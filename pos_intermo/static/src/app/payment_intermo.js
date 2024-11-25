@@ -131,10 +131,12 @@ export class PaymentIntermo extends PaymentInterface {
             x = x + "#1"
         }
         order.set_reference(x);
+
+        // config = self.env['intermo.gateway.config'].search([], limit=1)
         const data = {
             'amount': line.amount,
             "referenceid": x,
-            "publicApiKey": this.payment_method.intermo_public_key,
+            "publicApiKey": "TMuLbYe00eqq4QZMyfMMkrX3zaTjrlHVeqLlOZB1Sao",
             "sandbox": true,
             "currency": order.pos.currency.name,
             "customername": customername,
@@ -145,8 +147,8 @@ export class PaymentIntermo extends PaymentInterface {
             "pluginname": "Odoo",
             "pluginversion": "v1.1.0",
             "serverless": false,
-            "pluginkey": this.payment_method.intermo_plugin_key,
-            "secretkey": this.payment_method.intermo_secret_key,
+            "pluginkey": "usxibisbibackbvycv",
+            "secretkey": "IXFtFIeMICMq5hvAruyMLAxkVoyR6zvhyyHwXmZt5nU",
             "isolang": "en"
 
         };

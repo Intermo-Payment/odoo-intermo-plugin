@@ -1,0 +1,43 @@
+<odoo>
+    <!-- Form View -->
+    <record id="intermo_gateway_config_form_view" model="ir.ui.view">
+        <field name="name">intermo.gateway.config.form</field>
+        <field name="model">intermo.gateway.config</field>
+        <field name="arch" type="xml">
+            <form string="Intermo Gateway Configuration" create="false" delete="false">
+                <sheet>
+                    <group>
+                        <!-- Removed 'name' field -->
+                        <field name="mode"/>
+                        <field name="language"/>
+                        <field name="generated_secret_token" readonly="1"/>
+                        <field name="is_payment_method_configured" readonly="1" widget="boolean_button" options="{'term': 'Configured'}"/>
+                    </group>
+                    <!-- Sandbox Keys -->
+                    <group>
+                        <separator string="Sandbox Keys" colspan="4"/>
+                        <field name="sandbox_authentication_key"/>
+                        <field name="sandbox_public_key"/>
+                        <field name="sandbox_secret"/>
+                    </group>
+                    <!-- Production Keys -->
+                    <group>
+                        <separator string="Production Keys" colspan="4"/>
+                        <field name="production_authentication_key"/>
+                        <field name="production_public_key"/>
+                        <field name="production_secret"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_intermo_gateway_config" model="ir.actions.act_window">
+        <field name="name">Intermo Gateway Configuration</field>
+        <field name="res_model">intermo.gateway.config</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="intermo_gateway_config_form_view"/>
+        <field name="target">current</field>
+    </record>
+</odoo>
