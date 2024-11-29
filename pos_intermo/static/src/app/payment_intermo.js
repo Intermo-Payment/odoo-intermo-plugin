@@ -32,6 +32,7 @@ export class PaymentIntermo extends PaymentInterface {
          self.IntermoPopup = await self.env.services.popup.add(PosIntermoPopup, {
                 title: _t('Intermo Payment'),
                 body: self.url_link.qr_code,
+                testmsg : self.url_link.offline_mode
             });
          if (self.pos.get_order().intermo_payment_status == 'payment_success'){
                   clearInterval(self.intermoInterval);
@@ -136,7 +137,7 @@ export class PaymentIntermo extends PaymentInterface {
         const data = {
             'amount': line.amount,
             "referenceid": x,
-            "publicApiKey": "TMuLbYe00eqq4QZMyfMMkrX3zaTjrlHVeqLlOZB1Sao",
+            "publicApiKey": "mttDYOQWlY2LtFYw8wS8SpZBpg2S1jKGuGxYuTW8KA",
             "sandbox": true,
             "currency": order.pos.currency.name,
             "customername": customername,
@@ -148,7 +149,7 @@ export class PaymentIntermo extends PaymentInterface {
             "pluginversion": "v1.1.0",
             "serverless": false,
             "pluginkey": "usxibisbibackbvycv",
-            "secretkey": "IXFtFIeMICMq5hvAruyMLAxkVoyR6zvhyyHwXmZt5nU",
+            "secretkey": "dxljJasLUxqnFeZx7QV1d3HJ72v7X41ODtcKCEzRjE",
             "isolang": "en"
 
         };

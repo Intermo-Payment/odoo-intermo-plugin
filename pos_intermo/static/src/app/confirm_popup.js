@@ -48,11 +48,16 @@ import { useState } from "@odoo/owl";
 
 export class PosIntermoPopup extends AbstractAwaitablePopup {
     setup() {
+
+        // Access the QR code data
+        const qrCodeData = this.props.body;
+        console.log("QR Code Data:", qrCodeData);
         super.setup();
         this.state = useState({
             error_message: "Waiting for payment...",
             message_type: "info",
             odoo_offline: false, // Track Odoo offline state
+
         });
 
         const self = this;

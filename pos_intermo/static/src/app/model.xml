@@ -26,7 +26,7 @@
 
 </templates> -->
 
-
+<!-- 
 <templates id="template" xml:space="preserve">
     <t t-name="pos_intermo.PosIntermoPopup">
         <div class="popup popup-confirm">
@@ -41,11 +41,61 @@
                         <strong>Offline Odoo</strong>
                     </div>
                 </t>
+
+                <t t-else="">
+                    <span t-att-class="state.message_type == 'info'? 'text-info' : state.message_type == 'error'? 'text-danger': 'text-success'">
+                        <t t-esc="state.error_message"/>
+                    </span>
+                </t>
                 <t t-else="">
                     <img t-attf-src="data:image/png;base64,{{props.body}}" width="100%" height="600px"/>
                     <span t-att-class="state.message_type == 'info'? 'text-info' : state.message_type == 'error'? 'text-danger': 'text-success'">
                         <t t-esc="state.error_message"/>
                     </span>
+                </t>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">
+                    <t t-esc="props.confirmText"/>
+                </div>
+                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                    <t t-esc="props.cancelText"/>
+                </div>
+            </footer>
+        </div>
+    </t>
+</templates> -->
+
+
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_intermo.PosIntermoPopup">
+        <div class="popup popup-confirm">
+            <div class="modal-header">
+                <h4 class="modal-title title drag-handle">
+                    <t t-esc="props.title"/>
+                </h4>
+            </div>
+            <main class="modal-body">
+                <t t-if="state.odoo_offline">
+                    <!-- Content when Odoo is offline -->
+                    <div class="text-danger">
+                        <strong>Offline Odoo</strong>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- Content when Odoo is online -->
+                    <!-- Display the QR code image -->
+                    <img t-attf-src="data:image/png;base64,{{props.body}}" width="100%" height="600px"/>
+                    
+                    <!-- Display the error or success message -->
+                    <span t-att-class="state.message_type == 'info' ? 'text-info' : state.message_type == 'error' ? 'text-danger' : 'text-success'">
+                        <t t-esc="state.error_message"/>
+                    </span>
+                    
+                    <!-- Insert your paragraph tag with testmsg -->
+                    <p>
+                        <t t-esc="props.testmsg"/>
+                    </p>
                 </t>
             </main>
             <footer class="footer modal-footer">
