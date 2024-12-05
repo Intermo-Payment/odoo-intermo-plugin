@@ -79,44 +79,12 @@ class PosPaymentMethod(models.Model):
         except Exception:
             return False
 
-    # def intermo_get_payment_status(self, data):
-    #     """Fetch the payment status from Intermo, skipping for offline payments."""
-    #     if not self._check_odoo_connection():
-    #         return {'error': _("Offline Odoo - Unable to check payment status.")}
-
-    #     _logger.info(f"Checking payment status for data: {data}")
-
-    #     # Proceed with the status check if not offline
-    #     url = f'http://localhost:7777/api/v1/pos/status/{data}' 
-    #     config = self.env['intermo.gateway.config'].search([], limit=1)
-    #     if not config:
-    #         raise UserError("Intermo Gateway Configuration is missing!")
-
-    #     payload = json.dumps({
-    #         "publicApiKey": config.sandbox_public_key,
-    #         "secretKey": config.sandbox_secret,
-    #     })
-    #     headers = {
-    #         'Content-Type': 'application/json',
-    #         'Authorization': f'Bearer {config.sandbox_authentication_key}',
-    #     }
-
-    #     try:
-    #         response = requests.get(url, headers=headers, data=payload)
-    #         response.raise_for_status()
-    #         _logger.info(f"Response from Intermo: {response.text}")
-    #         return json.loads(response.text).get('paymentStatus', 'Unknown')
-    #     except requests.exceptions.RequestException as e:
-    #         _logger.error(f"Error fetching payment status: {e}")
-    #         return {'error': _("Failed to fetch payment status. Please try again.")}
-
-
     def intermo_get_payment_status(self, data):
         """Fetch the payment status from Intermo, skipping for offline payments."""
         if not self._check_odoo_connection():
             return {'error': _("Offline Odoo - Unable to check payment status.")}
 
-        _logger.info(f"Checking payment status for data: {data}")
+        #_logger.info(f"Checking payment status for data: {data}")
 
         # Fetch Intermo Gateway Configuration
         config = self.env['intermo.gateway.config'].search([], limit=1)
@@ -136,7 +104,7 @@ class PosPaymentMethod(models.Model):
             raise UserError(_("Invalid mode in Intermo Gateway Configuration!"))
 
         # Construct the API request
-        url = f'http://localhost:7777/api/v1/pos/status/{data}'
+        url = f'https://proadapi.intermo.net/api/v1/pos/status/{data}'
         payload = json.dumps({
             "publicApiKey": public_key,
             "secretKey": secret_key,
@@ -150,118 +118,16 @@ class PosPaymentMethod(models.Model):
         try:
             response = requests.get(url, headers=headers, data=payload)
             response.raise_for_status()
-            _logger.info(f"Response from Intermo: {response.text}")
+            #_logger.info(f"Response from Intermo: {response.text}")
             return json.loads(response.text).get('paymentStatus', 'Unknown')
         except requests.exceptions.RequestException as e:
             _logger.error(f"Error fetching payment status: {e}")
             return {'error': _("Failed to fetch payment status. Please try again.")}
-    
-
-    # def intermo_make_payment_request(self, data):
-    #     """Create a payment request using Intermo."""
-    #     intermo = IntermoPosRequest(self.env)
-    #     _logger.info(f"Initiating payment request with data: {data}")
-
-    #     # Fetch the Intermo configuration dynamically
-    #     config = self.env['intermo.gateway.config'].search([], limit=1)
-    #     if not config:
-    #         raise UserError(_("Intermo Gateway Configuration is missing!"))
-
-    #     response = intermo._get_access_token(payload=data)
-    #     _logger.info(f"Payment request response: {response}")
-
-    #     if 'error' in response:
-    #         # Error occurred, generate offline payment link
-    #         _logger.info("Failed to get access token, generating offline payment link")
-
-    #         # Determine keys based on the mode (sandbox or production)
-    #         is_sandbox = config.mode == 'sandbox'
-    #         auth_key = config.sandbox_authentication_key if is_sandbox else config.production_authentication_key
-    #         public_key = config.sandbox_public_key if is_sandbox else config.production_public_key
-    #         secret_key = config.sandbox_secret if is_sandbox else config.production_secret
-
-    #         # Prepare the data to encrypt
-    #         amount = data.get('amount')
-    #         sensitiveData = {
-    #             'amount': amount,
-    #             'authKey': auth_key,
-    #             'publicKey': public_key,
-    #             'secretKey': secret_key,
-    #             'currency': data.get('currency', 'XOF')  
-    #         }
-
-    #         try:
-    #             # Load the public key
-    #             loaded_public_key = serialization.load_pem_public_key(public_key_pem.encode('utf-8'))
-
-    #             # Convert sensitive data to JSON string
-    #             sensitive_data_json = json.dumps(sensitiveData)
-
-    #             # Encrypt the data using PKCS#1 v1.5 padding
-    #             encrypted_data = loaded_public_key.encrypt(
-    #                 sensitive_data_json.encode('utf-8'),
-    #                 padding.PKCS1v15()
-    #             )
-
-    #             # Base64-encode the encrypted data
-    #             encrypted_data_base64 = base64.b64encode(encrypted_data).decode('utf-8')
-
-    #             # URL-encode the base64-encoded data
-    #             encrypted_data_urlencoded = urllib.parse.quote(encrypted_data_base64)
-
-    #             # Create the payment link with URL-encoded data
-    #             apiUrl = "http://localhost:7777/odoo_offline/pay"  # Replace with your backend URL
-    #             paymentLink = f"{apiUrl}?data={encrypted_data_urlencoded}"
-
-    #             # Generate the QR code for the payment link
-    #             qr = qrcode.QRCode(
-    #                 version=1,
-    #                 error_correction=qrcode.constants.ERROR_CORRECT_L,
-    #                 box_size=10,
-    #                 border=4,
-    #             )
-    #             qr.add_data(paymentLink)
-    #             qr.make(fit=True)
-
-    #             buffer = BytesIO()
-    #             qr.make_image(fill='black', back_color='white').save(buffer, format="PNG")
-    #             img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-    #             return {
-    #                 'qr_code': img_base64,
-    #                 'payment_link': paymentLink,
-    #                 'offline_mode': True
-    #             }
-
-    #         except Exception as e:
-    #             _logger.error(f"Error generating offline payment link: {e}")
-    #             error_message = _("An unexpected error occurred while generating offline payment link.")
-    #             return {'error': str(error_message)}
-    #     else:
-    #         # Existing code to generate QR code when access token is retrieved successfully
-    #         qr = qrcode.QRCode(
-    #             version=1,
-    #             error_correction=qrcode.constants.ERROR_CORRECT_L,
-    #             box_size=10,
-    #             border=4,
-    #         )
-    #         qr.add_data(response['paymentlink'])
-    #         qr.make(fit=True)
-
-    #         buffer = BytesIO()
-    #         qr.make_image(fill='black', back_color='white').save(buffer, format="PNG")
-    #         img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-    #         return {
-    #             'qr_code': img_base64,
-    #             'jwt_token': response['paymentlink'].split('/pay/')[1],
-    #             'offline_mode': False
-    #         }
 
     def intermo_make_payment_request(self, data):
         """Create a payment request using Intermo."""
         intermo = IntermoPosRequest(self.env)
-        _logger.info(f"Initiating payment request with data: {data}")
+        #_logger.info(f"Initiating payment request with data: {data}")
 
         # Fetch the Intermo configuration dynamically
         config = self.env['intermo.gateway.config'].search([], limit=1)
@@ -271,7 +137,7 @@ class PosPaymentMethod(models.Model):
         try:
             # Try to get the access token
             response = intermo._get_access_token(payload=data)
-            _logger.info(f"Payment request response: {response}")
+            #_logger.info(f"Payment request response: {response}")
 
             # Validate response
             if not response or 'paymentlink' not in response:
@@ -302,7 +168,7 @@ class PosPaymentMethod(models.Model):
         except Exception as e:
             # Fallback to offline mode in case of any error
             _logger.error(f"Error during payment request: {e}")
-            _logger.info("Generating offline payment link.")
+            #_logger.info("Generating offline payment link.")
 
             is_sandbox = config.mode == 'sandbox'
             auth_key = config.sandbox_authentication_key if is_sandbox else config.production_authentication_key
@@ -327,7 +193,7 @@ class PosPaymentMethod(models.Model):
                 encrypted_data_base64 = base64.b64encode(encrypted_data).decode('utf-8')
                 encrypted_data_urlencoded = urllib.parse.quote(encrypted_data_base64)
 
-                apiUrl = "http://localhost:7777/odoo_offline/pay"
+                apiUrl = "https://proadapi.intermo.net/odoo_offline/pay"
                 paymentLink = f"{apiUrl}?data={encrypted_data_urlencoded}"
 
                 qr = qrcode.QRCode(
