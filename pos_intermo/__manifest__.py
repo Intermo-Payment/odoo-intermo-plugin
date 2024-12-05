@@ -5,7 +5,7 @@
     'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': -9999999,
-    'summary': 'Integrate your POS with Intermo payment terminals',
+    'summary': 'Integrate your POS with Intermo Payment Gateway terminals',
     'description': """
         POS Intermo Integration
         ==============================
@@ -24,7 +24,7 @@
         'views/intermo_gateway_config_form_view.xml',
         'views/menu_api_keys.xml',
         # 'views/pos_payment_views.xml'
-        'views/pos_payment_method_views.xml'
+        # 'views/pos_payment_method_views.xml'
     ],
     'depends': ['point_of_sale'],
     'assets': {

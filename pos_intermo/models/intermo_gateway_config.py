@@ -79,7 +79,7 @@ class IntermoGatewayConfig(models.Model):
         return [(record.id, "Intermo API Key Configuration") for record in self]
 
     def _configure_payment_method(self):
-        payment_method = self.env['pos.payment.method'].search([('name', '=', 'Intermo Payment')], limit=1)
+        payment_method = self.env['pos.payment.method'].search([('name', '=', 'Intermo Payment Gateway')], limit=1)
         if not payment_method:
             journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
             if not journal:
@@ -91,7 +91,7 @@ class IntermoGatewayConfig(models.Model):
                     'active': True,
                 })
             self.env['pos.payment.method'].create({
-                'name': 'Intermo Payment',
+                'name': 'Intermo Payment Gateway',
                 'use_payment_terminal': 'intermo',
                 'journal_id': journal.id,
                 'is_cash_count': False,
@@ -100,5 +100,5 @@ class IntermoGatewayConfig(models.Model):
     @api.depends('sandbox_public_key', 'production_public_key')
     def _compute_payment_method_status(self):
         for record in self:
-            payment_method = self.env['pos.payment.method'].search([('name', '=', 'Intermo Payment')], limit=1)
+            payment_method = self.env['pos.payment.method'].search([('name', '=', 'Intermo Payment Gateway')], limit=1)
             record.is_payment_method_configured = bool(payment_method)

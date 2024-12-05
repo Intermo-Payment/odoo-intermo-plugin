@@ -10,7 +10,7 @@
 
     <!-- Define the Payment Method -->
     <record id="pos_payment_method_intermo" model="pos.payment.method">
-        <field name="name">Intermo Payment</field>
+        <field name="name">Intermo Payment Gateway</field>
         <field name="journal_id" ref="account_journal_bank"/>
         <field name="use_payment_terminal">intermo</field>
         <field name="is_cash_count">False</field>

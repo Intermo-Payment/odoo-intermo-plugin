@@ -1,110 +1,77 @@
-<!-- <?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-
-    <t t-name="pos_intermo.PosIntermoPopup">
-        <div class="popup popup-confirm">
-            <div class="modal-header">
-                <h4 class="modal-title title drag-handle">
-                    <t t-esc="props.title"/>
-                </h4>
-            </div>
-            <main class="modal-body">
-                <img t-attf-src="data:image/png;base64,{{props.body}}" width="100%" height="600px"/>
-                <span t-att-class="state.message_type == 'info'? 'text-info' : state.message_type == 'error'? 'text-danger': 'text-success'"><t t-esc="state.error_message"/></span>
-            </main>
-            <footer class="footer modal-footer">
-                <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">
-                    <t t-esc="props.confirmText"/>
-                </div>
-                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                    <t t-esc="props.cancelText"/>
-                </div>
-            </footer>
-        </div>
-    </t>
-
-
-</templates> -->
-
-<!-- 
 <templates id="template" xml:space="preserve">
     <t t-name="pos_intermo.PosIntermoPopup">
         <div class="popup popup-confirm">
-            <div class="modal-header">
+            <div class="modal-header" t-attf-style="state.odoo_offline ? 'background-color: #ffcccc;' : ''">
                 <h4 class="modal-title title drag-handle">
-                    <t t-esc="props.title"/>
+                    <t t-if="state.odoo_offline">Offline Payment Mode</t>
+                    <t t-else="">Online Payment Mode</t>
                 </h4>
             </div>
             <main class="modal-body">
                 <t t-if="state.odoo_offline">
-                    <div class="text-danger">
-                        <strong>Offline Odoo</strong>
+                    <div style="background-color: #e6ffe6; border: 1px solid green; padding: 3px; margin-bottom: 5px;">
+                        <div class="text-success">
+                            <strong>Offline Payment Status</strong>
+                        </div>
+                        <p>
+                            <t t-esc="state.error_message" />
+                        </p>
+                        <div>
+                            <p>1. Ask the customer to scan the QR code below.</p>
+                            <p>2. Once the customer completes the payment, select the appropriate status. Click "Confirm Payment" to save the selected status.</p>
+                        </div>
                     </div>
-                </t>
+                    
+                    <img t-attf-src="data:image/png;base64,{{props.body}}" style="width: 100%; height: 50%;" />
 
-                <t t-else="">
-                    <span t-att-class="state.message_type == 'info'? 'text-info' : state.message_type == 'error'? 'text-danger': 'text-success'">
-                        <t t-esc="state.error_message"/>
-                    </span>
-                </t>
-                <t t-else="">
-                    <img t-attf-src="data:image/png;base64,{{props.body}}" width="100%" height="600px"/>
-                    <span t-att-class="state.message_type == 'info'? 'text-info' : state.message_type == 'error'? 'text-danger': 'text-success'">
-                        <t t-esc="state.error_message"/>
-                    </span>
-                </t>
-            </main>
-            <footer class="footer modal-footer">
-                <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">
-                    <t t-esc="props.confirmText"/>
-                </div>
-                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                    <t t-esc="props.cancelText"/>
-                </div>
-            </footer>
-        </div>
-    </t>
-</templates> -->
-
-
-<templates id="template" xml:space="preserve">
-    <t t-name="pos_intermo.PosIntermoPopup">
-        <div class="popup popup-confirm">
-            <div class="modal-header">
-                <h4 class="modal-title title drag-handle">
-                    <t t-esc="props.title"/>
-                </h4>
-            </div>
-            <main class="modal-body">
-                <t t-if="state.odoo_offline">
-                    <!-- Content when Odoo is offline -->
-                    <div class="text-danger">
-                        <strong>Offline Odoo</strong>
+                    <div style="margin-top: 8px;">
+                        <label for="payment-status">Select Payment Status:</label>
+                        <select id="payment-status" style="width: 100%; padding: 5px;" t-on-change="onStatusChange">
+                            <option value="pending" selected="selected">Payment Pending</option>
+                            <option value="success">Payment Success</option>
+                        </select>
                     </div>
                 </t>
                 <t t-else="">
-                    <!-- Content when Odoo is online -->
-                    <!-- Display the QR code image -->
-                    <img t-attf-src="data:image/png;base64,{{props.body}}" width="100%" height="600px"/>
-                    
-                    <!-- Display the error or success message -->
-                    <span t-att-class="state.message_type == 'info' ? 'text-info' : state.message_type == 'error' ? 'text-danger' : 'text-success'">
-                        <t t-esc="state.error_message"/>
-                    </span>
-                    
-                    <!-- Insert your paragraph tag with testmsg -->
-                    <p>
-                        <t t-esc="props.testmsg"/>
-                    </p>
+                    <div>
+                        <div style="background-color: #e6f7ff; border: 1px solid #007bff; padding: 5px; margin-bottom: 10px;">
+                            <div class="text-primary">
+                                <strong>Online Payment Instructions</strong>
+                            </div>
+                            <p>1. Show the QR code below to the customer.</p>
+                            <p>2. Ask the customer to scan the QR code using their mobile device. Ensure the customer has an active internet connection. if not click on Pay Now button to process payment.</p>
+                        </div>
+                        
+                        <img t-attf-src="data:image/png;base64,{{props.body}}" style="width: 100%; height: 50%;" />
+                        
+                        <span t-att-class="state.message_type == 'info' ? 'text-info' : state.message_type == 'error' ? 'text-danger' : 'text-success'">
+                            <t t-esc="state.error_message" />
+                        </span>
+                    </div>
+                    <div style="margin-top: 10px; text-align: center;">
+                        <button t-if="state.paylink" t-att-href="state.paylink" class="btn btn-lg btn-primary" t-on-click="openPaylink">
+                            Pay Now
+                        </button>
+                    </div>
                 </t>
             </main>
             <footer class="footer modal-footer">
-                <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">
-                    <t t-esc="props.confirmText"/>
-                </div>
-                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                    <t t-esc="props.cancelText"/>
-                </div>
+                <t t-if="!state.odoo_offline">
+                    <div class="button confirm btn btn-lg btn-primary" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancelPayment">
+                        <t t-esc="props.cancelText" />
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancelPayment">
+                        Cancel
+                    </div>
+                    <div class="button confirm btn btn-lg btn-success" t-on-click="confirmPayment">
+                        Confirm Payment
+                    </div>
+                </t>
             </footer>
         </div>
     </t>
