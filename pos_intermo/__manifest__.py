@@ -6,6 +6,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': -9999999,
     'summary': 'Integrate your POS with Intermo Payment Gateway terminals',
+    'author': 'Intermo Developer Team',
     'description': """
         POS Intermo Integration
         ==============================
