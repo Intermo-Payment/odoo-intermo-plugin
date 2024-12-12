@@ -1,11 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <!-- Root Menu -->
-    <menuitem id="intermo_custom_menu_root" name="Intermo API Key Configuration" sequence="10"/>
+    <menuitem id="intermo_custom_menu_root"
+              name="Intermo API Key Configuration"
+              sequence="10"/>
 
-    <!-- Submenu with Action -->
-    <menuitem id="intermo_gateway_config_menu" 
-              name="Configuration" 
-              parent="intermo_custom_menu_root" 
-              action="action_intermo_gateway_config" 
+    <!-- Submenu for Gateway Configuration -->
+    <menuitem id="intermo_gateway_config_menu"
+              name="Configuration"
+              parent="intermo_custom_menu_root"
+              action="action_intermo_gateway_config"
               sequence="20"/>
+
+    <!-- Submenu for Intermo Orders -->
+    <menuitem id="intermo_order_menu"
+              name="Intermo Orders"
+              parent="intermo_custom_menu_root"
+              action="action_intermo_order_history"
+              sequence="30"/>
 </odoo>

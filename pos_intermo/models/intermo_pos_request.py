@@ -37,8 +37,8 @@ class IntermoPosRequest:
                 'Authorization': f'Bearer {config.sandbox_authentication_key if config.mode == "sandbox" else config.production_authentication_key}',
             }
 
-            #_logger.info(f"Sending request to URL: https://proadapi.intermo.net/SandBox/v1/api/GetAccessToken with payload: {payload}")
-            response = requests.post("https://proadapi.intermo.net/SandBox/v1/api/GetAccessToken", json=payload, headers=headers)
+            #_logger.info(f"Sending request to URL: http://localhost:7777/SandBox/v1/api/GetAccessToken with payload: {payload}")
+            response = requests.post("http://localhost:7777/SandBox/v1/api/GetAccessToken", json=payload, headers=headers)
             response.raise_for_status()  # Raise an HTTPError if the HTTP request returned an unsuccessful status code
 
             #_logger.info(f"Received response: {response.json()}")

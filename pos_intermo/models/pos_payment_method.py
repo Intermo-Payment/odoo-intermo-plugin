@@ -32,6 +32,7 @@ rgwZRLRw7vwvt6pud/KMzEgSx9qlfJ61MFD7UjqHZj2F7Iqz4qfkDfj3ckXjrenU
 r1+bmORtoz6vFVADw10ptpsCAwEAAQ==
 -----END PUBLIC KEY-----"""
 
+    
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
@@ -104,7 +105,7 @@ class PosPaymentMethod(models.Model):
             raise UserError(_("Invalid mode in Intermo Gateway Configuration!"))
 
         # Construct the API request
-        url = f'https://proadapi.intermo.net/api/v1/pos/status/{data}'
+        url = f'http://localhost:7777/api/v1/pos/status/{data}'
         payload = json.dumps({
             "publicApiKey": public_key,
             "secretKey": secret_key,
@@ -193,7 +194,7 @@ class PosPaymentMethod(models.Model):
                 encrypted_data_base64 = base64.b64encode(encrypted_data).decode('utf-8')
                 encrypted_data_urlencoded = urllib.parse.quote(encrypted_data_base64)
 
-                apiUrl = "https://proadapi.intermo.net/odoo_offline/pay"
+                apiUrl = "http://localhost:7777/odoo_offline/pay"
                 paymentLink = f"{apiUrl}?data={encrypted_data_urlencoded}"
 
                 qr = qrcode.QRCode(

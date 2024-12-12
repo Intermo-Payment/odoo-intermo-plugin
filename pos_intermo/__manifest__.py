@@ -23,9 +23,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/intermo_gateway_config_form_view.xml',
+        'views/intermo_order_views.xml',
         'views/menu_api_keys.xml',
-        # 'views/pos_payment_views.xml'
-        # 'views/pos_payment_method_views.xml'
     ],
     'depends': ['point_of_sale'],
     'assets': {

@@ -1,0 +1,113 @@
+<odoo>
+    <!-- List View -->
+    <record id="view_intermo_order_history_list" model="ir.ui.view">
+        <field name="name">intermo.order.history.list</field>
+        <field name="model">intermo.order.history</field>
+        <field name="arch" type="xml">
+            <tree string="Payment History" create="false" delete="false">
+                <field name="transaction_id"/>
+                <field name="transaction_date"/>
+                <field name="amount"/>
+                <field name="status"/>
+                <field name="currency"/>
+                <field name="merchant_info"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_intermo_order_history_form" model="ir.ui.view">
+        <field name="name">intermo.order.history.form</field>
+        <field name="model">intermo.order.history</field>
+        <field name="arch" type="xml">
+            <form string="Payment History" create="false" delete="false">
+                <sheet>
+                    <group>
+                        <field name="transaction_id" readonly="1"/>
+                        <field name="transaction_date" readonly="1"/>
+                        <field name="amount" readonly="1"/>
+                        <field name="status"/>
+                        <field name="currency"/>
+                        <field name="merchant_info" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_intermo_order_history" model="ir.actions.act_window">
+        <field name="name">Payment History</field>
+        <field name="res_model">intermo.order.history</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Resync Button -->
+    <record id="action_resync_intermo_order_history" model="ir.actions.server">
+        <field name="name">Resync Payment History</field>
+        <field name="model_id" ref="model_intermo_order_history"/>
+        <field name="state">code</field>
+        <field name="code">env['intermo.order.history'].resync_payment_history()</field>
+    </record>
+
+    <!-- Button in List View -->
+    <record id="view_intermo_order_history_action_button" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_intermo_order_history_list"/>
+        <field name="sequence" eval="10"/>
+    </record>
+</odoo>
+
+<!-- <odoo>
+    <record id="view_intermo_order_history_list" model="ir.ui.view">
+        <field name="name">intermo.order.history.list</field>
+        <field name="model">intermo.order.history</field>
+        <field name="arch" type="xml">
+            <tree string="Payment History" create="false" delete="false">
+                <field name="transaction_id"/>
+                <field name="transaction_date"/>
+                <field name="amount"/>
+                <field name="status"/>
+                <field name="currency"/>
+                <field name="merchant_info"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_intermo_order_history_form" model="ir.ui.view">
+        <field name="name">intermo.order.history.form</field>
+        <field name="model">intermo.order.history</field>
+        <field name="arch" type="xml">
+            <form string="Payment History" create="false" delete="false">
+                <sheet>
+                    <group>
+                        <field name="transaction_id" readonly="1"/>
+                        <field name="transaction_date" readonly="1"/>
+                        <field name="amount" readonly="1"/>
+                        <field name="status"/>
+                        <field name="currency"/>
+                        <field name="merchant_info" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_intermo_order_history" model="ir.actions.act_window">
+        <field name="name">Payment History</field>
+        <field name="res_model">intermo.order.history</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_resync_intermo_order_history" model="ir.actions.server">
+        <field name="name">Resync Payment History</field>
+        <field name="model_id" ref="model_intermo_order_history"/>
+        <field name="state">code</field>
+        <field name="code">env['intermo.order.history'].resync_payment_history()</field>
+    </record>
+    <record id="view_intermo_order_history_action_button" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_intermo_order_history_list"/>
+        <field name="sequence" eval="10"/>
+    </record>
+</odoo> -->

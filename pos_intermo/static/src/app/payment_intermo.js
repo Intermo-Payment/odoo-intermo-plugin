@@ -174,42 +174,39 @@ export class PaymentIntermo extends PaymentInterface {
     async _waitForPaymentConfirmation() {
         const self = this;
         const order = self.pos.get_order();
-
+    
         // Skip confirmation check in offline mode
-        if (order.url_link && order.url_link.offline_mode ) {
+        if (order.url_link && order.url_link.offline_mode) {
             console.log("Payment is in offline mode. Skipping status check.");
             return;
         }
-
+    
         console.log("Checking payment status in online mode...");
-
+    
         try {
-            // Check for transaction in the database
-            const payment_trx = await self.pos.orm.call("pos.payment.txn", "search_read", [], {
-                fields: ["name", "status"],
-                domain: [["name", "=", order.name]],
+            // Fetch payment status via `intermo_get_payment_status`
+            let tmp_payment_method_id = null;
+            order.paymentlines.forEach((pl) => {
+                if (pl.payment_method.use_payment_terminal === "intermo") {
+                    tmp_payment_method_id = pl.payment_method.id;
+                }
             });
-
-            if (payment_trx.length > 0) {
-                order.intermo_payment_status = payment_trx[0]["status"];
-                console.log("Transaction found in database:", order.intermo_payment_status);
-            } else {
-                // If no transaction is found, check via Intermo API
-                let tmp_payment_method_id = null;
-                order.paymentlines.forEach((pl) => {
-                    if (pl.payment_method.use_payment_terminal === "intermo") {
-                        tmp_payment_method_id = pl.payment_method.id;
-                    }
-                });
-
-                if (tmp_payment_method_id) {
-                    const payment_status_check = await self.pos.orm.call(
-                        "pos.payment.method",
-                        "intermo_get_payment_status",
-                        [tmp_payment_method_id, order.jwt_token]
-                    );
-                    console.log("Fetched payment status from intermo_get_payment_status:", payment_status_check);
+    
+            if (tmp_payment_method_id) {
+                const payment_status_check = await self.pos.orm.call(
+                    "pos.payment.method",
+                    "intermo_get_payment_status",
+                    [[tmp_payment_method_id], order.jwt_token]
+                );
+                console.log("Fetched payment status from intermo_get_payment_status:", payment_status_check);
+    
+                // Update the order's payment status based on the API response
+                if (payment_status_check.error) {
+                    order.intermo_payment_status = "error";
+                    console.error("Error from Intermo Get Status:", payment_status_check.error);
+                } else {
                     order.intermo_payment_status = payment_status_check;
+                    console.log("Payment status updated:", order.intermo_payment_status);
                 }
             }
         } catch (error) {
@@ -217,8 +214,7 @@ export class PaymentIntermo extends PaymentInterface {
             order.intermo_payment_status = "unknown";
         }
     }
-
-
+    
 
     _showError(error_msg, title) {
         this.env.services.dialog.add(AlertDialog, {
